@@ -1,0 +1,18 @@
+{
+  "searchName": "MY TEST FLOW QUERY",
+  "startDateTime": "2017-03-10T08:00:00Z",
+  "endDateTime": "2017-03-10T08:05:00Z",
+  "recordLimit": 2000,
+  "subject": {
+    "hostGroups": {
+      "includes": [],
+      "excludes": []
+    }
+  },
+  "peer": {
+    "hostGroups": {
+      "includes": [],
+      "excludes": []
+    }
+  }
+}
