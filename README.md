@@ -33,7 +33,7 @@
     <img src="images/logo.png" alt="Logo" width="80" height="80">
   </a>
 
-  <h3 align="center">Best-README-Template</h3>
+  <h3 align="center">SNA Autometron</h3>
 
   <p align="center">
     An awesome README template to jumpstart your projects!
@@ -84,16 +84,15 @@
 
 [![Product Name Screen Shot][product-screenshot]](https://example.com)
 
-There are many great README templates available on GitHub; however, I didn't find one that really suited my needs so I created this enhanced one. I want to create a README template so amazing that it'll be the last one you ever need -- I think this is it.
+Identifying peer hosts on the internet may be integral to your optimal security posture.  Unfortunately it can be difficult to associate IP addresses with domains.
 
-Here's why:
-* Your time should be focused on creating something amazing. A project that solves a problem and helps others
-* You shouldn't be doing the same tasks over and over like creating a README from scratch
-* You should implement DRY principles to the rest of your life :smile:
+This project hopes to help manage that difficulty by monitoring unknown peers on the web and using data from Shodan to correlate to a particular domain.  This way you can more easily identify internet based peers your internal hosts are communicating with.
 
-Of course, no one template will serve all projects since your needs may be different. So I'll be adding more in the near future. You may also suggest changes by forking this repo and creating a pull request or opening an issue. Thanks to all the people have contributed to expanding this template!
+This script will execute flow queries searching for flows from a destingated internal host group searching for unidentified hosts on the web. These peers will be evaluated against Shodan to try and associate a domain with the peer IP addresses.
 
-Use the `BLANK_README.md` to get started.
+Once you have identified the peer domains - you can choose to automatically add hosts associated with your target domain(s) to a specified Outside hostrgroup.  In addition, an Excel spreadsheet will be generated identifying the IP addresses and associated domain name(s) of other peer IP's that do not match your given criteria. This can allow you to investigate these connections and drop them in host groups as needed.
+
+
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -137,7 +136,7 @@ _Below is an example of how you can instruct your audience on installing and set
 1. Get a free API Key at [https://example.com](https://example.com)
 2. Clone the repo
    ```sh
-   git clone https://github.com/your_username_/Project-Name.git
+   git clone https://github.com/gobblegoob/Project-Name.git
    ```
 3. Install NPM packages
    ```sh
@@ -166,13 +165,8 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 <!-- ROADMAP -->
 ## Roadmap
 
-- [x] Add Changelog
-- [x] Add back to top links
-- [ ] Add Additional Templates w/ Examples
-- [ ] Add "components" document to easily copy & paste sections of the readme
-- [ ] Multi-language Support
-    - [ ] Chinese
-    - [ ] Spanish
+- [x] Allow for multiple destination hostgroups
+
 
 See the [open issues](https://github.com/othneildrew/Best-README-Template/issues) for a full list of proposed features (and known issues).
 
@@ -210,9 +204,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 <!-- CONTACT -->
 ## Contact
 
-Your Name - [@your_twitter](https://twitter.com/your_username) - email@example.com
-
-Project Link: [https://github.com/your_username/repo_name](https://github.com/your_username/repo_name)
+Project Link: [https://github.com/gobblegoob/SNA-Automatron](https://github.com/gobblegoob/SNA-Automatron)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
