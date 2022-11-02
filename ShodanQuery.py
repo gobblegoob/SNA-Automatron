@@ -81,8 +81,10 @@ class ShodanQuery():
         :arg: list - list of ip addresses
         :return: 
         '''
-        self.SRC_IP_LIST = ip_list
-        self.SRC_IP_LIST = self.dedup_list(self.SRC_IP_LIST)
+        if ip_list != None:
+            self.SRC_IP_LIST = self.dedup_list(ip_list)
+        else:
+            print('IP List is empty')
         return
 
 
@@ -145,7 +147,7 @@ class ShodanQuery():
         except KeyError as e:
             pass
         except Exception as e:
-            print(f'General Excecptoin in find_ip_by_domain: {e}')
+            print(f'General Excecption in find_ip_by_domain: {e}')
 
 
 
@@ -185,6 +187,23 @@ class ShodanQuery():
         wb.save(filename=fn)
     
         # print(json.dumps(self.OTHER_HOSTS, indent=4))
+        return
+
+    def shodan_query(self):
+        '''
+        Execute shodan queries against our ips in the ip list.  Create the lists
+        for domain associated and unmatched ip addresses
+        :return:
+        '''
+        self.get_cred_json('shodan.json')
+        
+        for host in self.SRC_IP_LIST:
+            this = self.get_host(host)
+            try:
+                self.find_ip_by_domain(this, 'ring.com')
+            except KeyError as e:
+                print(f'Error looking up {host}\n Shodan may have no data for this IP\n{e}')
+                self.output_list.append(host)
         return
 
 

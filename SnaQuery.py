@@ -3,9 +3,7 @@
 '''
 
 import json
-import openpyxl
 import datetime
-import requests
 import time
 
 class SnaQuery():
@@ -83,15 +81,15 @@ class SnaQuery():
                     self.DEST_TAG_ID_INCLUDE.append(i['id'])
 
         # set the destination tag for exclude
-        for dtne in self.DEST_TAG_ID_EXCLUDE:
+        for dtne in self.DEST_TAG_NAMES_EXCLUDE:
             for i in tags:
-                if i['name'] == dtni:
+                if i['name'] == dtne:
                     self.DEST_TAG_ID_EXCLUDE.append(i['id'])
 
-        # print(f'Included source tags: {self.SOURCE_TAG_ID_INCLUDE}')
-        # print(f'Excluded source tags: {self.SOURCE_TAG_ID_EXCLUDE}')            
-        # print(f'Included destination tags: {self.DEST_TAG_ID_INCLUDE}')
-        # print(f'Excluded destination tags: {self.DEST_TAG_ID_EXCLUDE}')
+        print(f'Included source tags: {self.SOURCE_TAG_ID_INCLUDE}')
+        print(f'Excluded source tags: {self.SOURCE_TAG_ID_EXCLUDE}')            
+        print(f'Included destination tags: {self.DEST_TAG_ID_INCLUDE}')
+        print(f'Excluded destination tags: {self.DEST_TAG_ID_EXCLUDE}')
         return
 
     
@@ -119,7 +117,7 @@ class SnaQuery():
         '''
         # Create timestamps for query filters in the correct format.  
         end_datetime = datetime.datetime.utcnow()
-        start_datetime = end_datetime - datetime.timedelta(minutes=2)
+        start_datetime = end_datetime - datetime.timedelta(minutes=720)
         end_timestamp = end_datetime.strftime('%Y-%m-%dT%H:%M:%SZ')
         start_timestamp = start_datetime.strftime('%Y-%m-%dT%H:%M:%SZ')
 
@@ -164,24 +162,15 @@ class SnaQuery():
                 search = json.loads(r.content)['data']['query']
                 print(search['percentComplete'])
                 time.sleep(1)
-                
+            
+            print(' -- SNA Flow Query Completed -- ')
             # set the url to check check the serach results and get them
             url = session.BASE_URL + '/sw-reporting/v2/tenants/' + session.SNA_TENANT + '/flows/queries/' + search["id"] + "/results"
             r = my_session.request('GET', url, verify=False)
             results = json.loads(r.content)['data']['flows']
 
-            print(json.dumps(results, indent=4))
+            # print(json.dumps(results, indent=4))
         return results
-
-
-    def query_peer_list(self):
-        '''
-        Take the peer result list and output that for use with 
-        :return: list - peer hosts deduplicated
-        '''
-        q = self.run_flow_query()
-
-        q = q
 
 
     def init_query(self):
