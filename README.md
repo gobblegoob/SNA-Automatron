@@ -102,14 +102,7 @@ Once you have identified the peer domains - you can choose to automatically add 
 
 This section should list any major frameworks/libraries used to bootstrap your project. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
 
-* [Next.js](https://nextjs.org/)
-* [React.js](https://reactjs.org/)
-* [Vue.js](https://vuejs.org/)
-* [Angular](https://angular.io/)
-* [Svelte](https://svelte.dev/)
-* [Laravel](https://laravel.com)
-* [Bootstrap](https://getbootstrap.com)
-* [JQuery](https://jquery.com)
+* [Python](https://python.org/)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -120,7 +113,7 @@ This section should list any major frameworks/libraries used to bootstrap your p
 
 This is an example of how you may give instructions on setting up your project locally.
 To get a local copy up and running follow these simple example steps.
-
+<!--
 ### Prerequisites
 
 This is an example of how to list things you need to use the software and how to install them.
@@ -149,12 +142,16 @@ _Below is an example of how you can instruct your audience on installing and set
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-
+-->
 
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
+Ask yourself:
+ - What domain am I trying to identify?  
+ - What hostgroup do I want to update
+
+Then tell that stuff to the app.  
 
 _For more examples, please refer to the [Documentation](https://example.com)_
 
@@ -212,6 +209,7 @@ Project Link: [https://github.com/gobblegoob/SNA-Automatron](https://github.com/
 
 <!-- ACKNOWLEDGMENTS -->
 ## Acknowledgments
+
 
 Use this space to list resources you find helpful and would like to give credit to. I've included a few of my favorites to kick things off!
 
