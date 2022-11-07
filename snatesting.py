@@ -3,6 +3,9 @@ from SnaQuery import SnaQuery
 from ShodanQuery import ShodanQuery
 from SnaTagAdd import SnaTagAdd
 
+# This is the domain name you want to search Shodan for
+MY_DOMAIN = ''
+
 def shodan_lookup_list(query_results):
     '''
     Get a list of peer IP addresses.  This will be the source for the shodan query
@@ -12,6 +15,14 @@ def shodan_lookup_list(query_results):
     for i in query_results:
         lookup_list.append(i['peer']['ipAddress'])
     return lookup_list
+
+def input_my_domain():
+    '''
+    Text prompt for destination domain as seen in Shodan result. IE: ring.com
+    :return: str - my_domain
+    '''
+    my_domain = input('Enter the domain you wish to search: ')
+    return my_domain
 
 
 if __name__ == '__main__':
@@ -41,7 +52,14 @@ if __name__ == '__main__':
     print(' -- Beginning Shodan Lookups -- ')
     lookup_list = shodan_lookup_list(query_results)
     shodan.set_ip_list(lookup_list)
-    shodan.shodan_query()
+
+    # Search for your targeted domain in Shodan if the MY_DOMAIN global variable is not set above
+    if MY_DOMAIN == '':
+        MY_DOMAIN = input_my_domain()
+        shodan.shodan_query(MY_DOMAIN)
+    else:
+        shodan.shodan_query(MY_DOMAIN)
+    
     print(shodan.OUTPUT_LIST)
     print('Generating Unknown Hosts Spreadsheet')
     shodan.unknown_host_to_spreadsheet()
@@ -54,6 +72,6 @@ if __name__ == '__main__':
     print(' -- Updating Tags -- ')
     # ip_list = ['34.234.171.45', '52.70.61.48', '52.20.195.83', '34.193.202.53']
     # tag.update_tags(ip_list, api)
-    tag.update_tags(shodan.OUTPUT_LIST, api)
+    #tag.update_tags(shodan.OUTPUT_LIST, api)
 
     quit()

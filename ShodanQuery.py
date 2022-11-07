@@ -189,7 +189,7 @@ class ShodanQuery():
         # print(json.dumps(self.OTHER_HOSTS, indent=4))
         return
 
-    def shodan_query(self):
+    def shodan_query(self, my_domain):
         '''
         Execute shodan queries against our ips in the ip list.  Create the lists
         for domain associated and unmatched ip addresses
@@ -200,7 +200,7 @@ class ShodanQuery():
         for host in self.SRC_IP_LIST:
             this = self.get_host(host)
             try:
-                self.find_ip_by_domain(this, 'ring.com')
+                self.find_ip_by_domain(this, my_domain)
             except KeyError as e:
                 print(f'Error looking up {host}\n Shodan may have no data for this IP\n{e}')
                 self.output_list.append(host)
