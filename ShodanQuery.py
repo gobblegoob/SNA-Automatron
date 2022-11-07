@@ -19,17 +19,7 @@ class ShodanQuery():
     output_list = []
     # This is a dict of IP's and associated domains that do not fit the criteria of your search
     other_hosts = []
-    SRC_IP_LIST = [
-        '52.33.173.159',
-        '54.165.196.113',
-        '34.236.110.128',
-        '34.233.247.155',
-        '52.45.126.171',
-        '216.239.35.0',
-        '54.231.138.17',
-        '52.224.203.0',
-        '192.241.211.46'
-        ]
+    SRC_IP_LIST = []
 
 
     def __init__(self):
@@ -38,15 +28,7 @@ class ShodanQuery():
         # This is the list of IP addresses targeted to add to a hostgroup
         self.OUTPUT_LIST = []
         self.OTHER_HOSTS = []
-        self.SRC_IP_LIST = [
-            '52.33.173.159',
-            '54.165.196.113',
-            '34.236.110.128',
-            '216.239.35.0',
-            '54.231.138.17',
-            '52.224.203.0',
-            '192.241.211.46'
-        ]
+        self.SRC_IP_LIST = []
 
     def get_cred_json(self, js_file):
         """

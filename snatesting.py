@@ -5,6 +5,8 @@ from SnaTagAdd import SnaTagAdd
 
 # This is the domain name you want to search Shodan for
 MY_DOMAIN = ''
+# Add the tag name you wish this script to update.  Only one name is supported at the moment.  Don't put in more than one value!
+MY_TAG_TO_UPDATE = []
 
 def shodan_lookup_list(query_results):
     '''
@@ -25,6 +27,17 @@ def input_my_domain():
     return my_domain
 
 
+def input_my_tag():
+    '''
+    This is the dynamically updated tag we will put our designated hosts into
+    :return: my_tag
+    '''
+    tag_list = []
+    my_tag = input('Enter the hostgroup you wish to update: ')
+    tag_list.append(my_tag)
+    return tag_list
+
+
 if __name__ == '__main__':
     # initialize our classes
     api = SnaAPISession()
@@ -33,7 +46,10 @@ if __name__ == '__main__':
     tag = SnaTagAdd()
 
     # set my destination tag name.
-    tag_update = ['Dynamic Ring IPs']
+    if MY_TAG_TO_UPDATE == []:
+        tag_update = input_my_tag()
+    else:
+        tag_update = MY_TAG_TO_UPDATE
 
     api.sna_session_init('sna.json')
     query.set_sna_json('sna.json')
@@ -72,6 +88,6 @@ if __name__ == '__main__':
     print(' -- Updating Tags -- ')
     # ip_list = ['34.234.171.45', '52.70.61.48', '52.20.195.83', '34.193.202.53']
     # tag.update_tags(ip_list, api)
-    #tag.update_tags(shodan.OUTPUT_LIST, api)
+    tag.update_tags(shodan.OUTPUT_LIST, api)
 
     quit()

@@ -70,21 +70,21 @@ class SnaQuery():
 
         # set the source tag id list for exclude
         for stne in self.SOURCE_TAG_NAMES_EXCLUDE:
-            for i in tags:
-                if i['name'] == stne:
-                    self.SOURCE_TAG_ID_EXCLUDE.append(i['id'])
+            for j in tags:
+                if j['name'] == stne:
+                    self.SOURCE_TAG_ID_EXCLUDE.append(j['id'])
 
         # set the destination tag id for include
         for dtni in self.DEST_TAG_NAMES_INCLUDE:
-            for i in tags:
-                if i['name'] == dtni:
-                    self.DEST_TAG_ID_INCLUDE.append(i['id'])
+            for k in tags:
+                if k['name'] == dtni:
+                    self.DEST_TAG_ID_INCLUDE.append(k['id'])
 
         # set the destination tag for exclude
         for dtne in self.DEST_TAG_NAMES_EXCLUDE:
-            for i in tags:
-                if i['name'] == dtne:
-                    self.DEST_TAG_ID_EXCLUDE.append(i['id'])
+            for l in tags:
+                if l['name'] == dtne:
+                    self.DEST_TAG_ID_EXCLUDE.append(l['id'])
 
         print(f'Included source tags: {self.SOURCE_TAG_ID_INCLUDE}')
         print(f'Excluded source tags: {self.SOURCE_TAG_ID_EXCLUDE}')            
