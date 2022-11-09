@@ -10,6 +10,7 @@ from datetime import datetime
 import csv
 import json
 from openpyxl import Workbook
+import re
 
 class ShodanQuery():
 
@@ -28,7 +29,15 @@ class ShodanQuery():
         # This is the list of IP addresses targeted to add to a hostgroup
         self.OUTPUT_LIST = []
         self.OTHER_HOSTS = []
-        self.SRC_IP_LIST = []
+        self.SRC_IP_LIST = [
+            '52.71.205.145',
+            '54.205.147.219',
+            '100.24.139.212',
+            '34.218.87.84',
+            '35.164.169.76'
+        ]
+
+        self.SRC_IP_LIST = ['34.218.87.84']
 
     def get_cred_json(self, js_file):
         """
@@ -102,7 +111,7 @@ class ShodanQuery():
         That will allow you to research this list seperately
         :arg: response: The host lookup api response from Shodan.io
         :arg: your speciied domain name(s)
-        :return:
+        :return: boolean - True if domain was found, false if not
         '''
 
         try:
@@ -116,12 +125,17 @@ class ShodanQuery():
                     self.OUTPUT_LIST.append(host_ip)
                     break
                 elif d != domain and i == l-1: 
-                    other = {
-                        'ip': host_ip,
-                        'domains': dlist
-                        }
-                    self.OTHER_HOSTS.append(other)
-                    break
+                    # check the cert CN as a final check
+                    if self.check_cert_cn(response) == True:
+                        self.OUTPUT_LIST.append(host_ip)
+                        break
+                    else:
+                        other = {
+                            'ip': host_ip,
+                            'domains': dlist
+                            }
+                        self.OTHER_HOSTS.append(other)
+                        break
                 elif d != domain and i < l:
                     i += 1
         except TypeError as e:
@@ -164,9 +178,16 @@ class ShodanQuery():
             i += 1
     
         today = datetime.today()
-        my_date = str(today.year) + '_' + str(today.month) + '_' + str(today.day)
-        fn = f'{my_date}_OtherDomainsReport.xlsx'
-        wb.save(filename=fn)
+        try:
+            my_date = str(today.year) + '_' + str(today.month) + '_' + str(today.day)
+            fn = f'{my_date}_OtherDomainsReport.xlsx'
+            wb.save(filename=fn)
+        except PermissionError as p:
+            print(f'Unable to save report: Possibly file with name {fn} is open\n{p}')
+            return
+        except Exception as e:
+            print(f'Error in unknown_host_to_spreadsheet\n {e}')
+            return
     
         # print(json.dumps(self.OTHER_HOSTS, indent=4))
         return
@@ -175,6 +196,7 @@ class ShodanQuery():
         '''
         Execute shodan queries against our ips in the ip list.  Create the lists
         for domain associated and unmatched ip addresses
+        :arg: str -- domain you wish to search for
         :return:
         '''
         self.get_cred_json('shodan.json')
@@ -189,6 +211,25 @@ class ShodanQuery():
         return
 
 
+    def check_cert_cn(self, response):
+        '''
+        Check the response for a certificate - CN then SAN fields for a specific string
+        This will match a string in the CN or SubjectAltName certificate fields that meet the required criteria
+        :arg: dict - response from a host lookup call
+        :return: boolean - True if string is found
+        '''
+        match_string = 'ring.devices.'
+        # Check CN Field
+        #print(json.dumps(response['data'][0]['ssl']['cert']['subject']['CN'], indent=4))
+        my_cn = response['data'][0]['ssl']['cert']['subject']['CN']
+        if re.search(match_string, my_cn):
+            return True
+        else:
+            return False
+
+        #subject_alt_name = json.dumps(response['data'][0]['ssl']['cert']['extensions'], indent=4)
+
+
 if __name__ == "__main__":
     sq = ShodanQuery()
     sq.get_cred_json("shodan.json")
@@ -197,6 +238,8 @@ if __name__ == "__main__":
     # Comment this line out for testing
     # sq.get_ip_list()
 
+    sq.shodan_query('ring.com')
+    '''
     for host in sq.SRC_IP_LIST:
         this = sq.get_host(host)
         try:
@@ -206,10 +249,9 @@ if __name__ == "__main__":
             print(f'Error looking up {host}\n Shodan may have no data for this IP\n Error Reported: {e}')
             sq.output_list.append(host)
         
-    sq.unknown_host_to_spreadsheet()
-
+    #sq.unknown_host_to_spreadsheet()
+    '''
     print('Output List --------------------')
     for i in sq.OUTPUT_LIST:
         print(f'{i}')
     print('End Output List --------------------')
-
