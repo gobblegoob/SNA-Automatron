@@ -36,8 +36,7 @@ class ShodanQuery():
             '34.218.87.84',
             '35.164.169.76'
         ]
-
-        self.SRC_IP_LIST = ['34.218.87.84']
+        self.CERT_STR = ''
 
     def get_cred_json(self, js_file):
         """
@@ -182,6 +181,7 @@ class ShodanQuery():
             my_date = str(today.year) + '_' + str(today.month) + '_' + str(today.day)
             fn = f'{my_date}_OtherDomainsReport.xlsx'
             wb.save(filename=fn)
+            print(f'Report Created! {fn}')
         except PermissionError as p:
             print(f'Unable to save report: Possibly file with name {fn} is open\n{p}')
             return
@@ -218,16 +218,48 @@ class ShodanQuery():
         :arg: dict - response from a host lookup call
         :return: boolean - True if string is found
         '''
-        match_string = 'ring.devices.'
+        # match_string = ''
         # Check CN Field
-        #print(json.dumps(response['data'][0]['ssl']['cert']['subject']['CN'], indent=4))
         my_cn = response['data'][0]['ssl']['cert']['subject']['CN']
-        if re.search(match_string, my_cn):
+        if re.search(self.CERT_STR, my_cn):
+            print(f'CN match found for {my_cn}')
             return True
         else:
-            return False
+            is_found = False
+            # check SAN fields of cert for your string
+            is_found = self.check_cert_san(response)
+            return is_found
 
-        #subject_alt_name = json.dumps(response['data'][0]['ssl']['cert']['extensions'], indent=4)
+
+    def check_cert_san(self, response):
+        '''
+        Look up the SAN fields in the certs for your designated string
+        :return: boolean - true if found
+        '''
+        for i in response['data'][0]['ssl']['cert']['extensions']:
+            if i['name'] == 'subjectAltName':
+                print(f'Name: {i["name"]}\nData: {i["data"]}')
+                if re.search(self.CERT_STR, i['data']):
+                    print('SAN match found')
+                    return True
+                else:
+                    print('SAN match not found')
+                    return False
+        
+        return False
+
+
+    def set_cert_str(self, cert_str):
+        '''
+        Pulls in the cert match str and sets the corresponding global variable
+        This string is regex that matches a CN or SAN field entry for a sites certificate.
+        This is an additional check you can run against Shodan to help accurately identify
+        internet hosts
+        :arg: str
+        :return:
+        '''
+        self.CERT_STR = cert_str
+        return
 
 
 if __name__ == "__main__":
