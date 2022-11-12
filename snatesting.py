@@ -7,6 +7,9 @@ from SnaTagAdd import SnaTagAdd
 MY_DOMAIN = ''
 # Add the tag name you wish this script to update.  Only one name is supported at the moment.  Don't put in more than one value!
 MY_TAG_TO_UPDATE = []
+# Enter a partial match string for a certificate CN or SAN based on your search.
+# This can help pull more accurate results if domain info is unavailable in Shodan
+CERT_STR = ''
 
 def shodan_lookup_list(query_results):
     '''
