@@ -9,7 +9,7 @@ MY_DOMAIN = ''
 MY_TAG_TO_UPDATE = []
 # Enter a partial match string for a certificate CN or SAN based on your search.
 # This can help pull more accurate results if domain info is unavailable in Shodan
-CERT_STR = ''
+CERT_STR = '.ring.devices.'
 
 def shodan_lookup_list(query_results):
     '''
@@ -53,6 +53,17 @@ if __name__ == '__main__':
         tag_update = input_my_tag()
     else:
         tag_update = MY_TAG_TO_UPDATE
+    
+    # if the cert search string is set in CERT_STR, pass that to the Shodan object
+    if CERT_STR != '':
+        shodan.set_cert_str(CERT_STR)
+
+    # Search for your targeted domain in Shodan if the MY_DOMAIN global variable is not set above
+    if MY_DOMAIN == '':
+        MY_DOMAIN = input_my_domain()
+        shodan.shodan_query(MY_DOMAIN)
+    else:
+        shodan.shodan_query(MY_DOMAIN)
 
     api.sna_session_init('sna.json')
     query.set_sna_json('sna.json')
@@ -72,12 +83,6 @@ if __name__ == '__main__':
     lookup_list = shodan_lookup_list(query_results)
     shodan.set_ip_list(lookup_list)
 
-    # Search for your targeted domain in Shodan if the MY_DOMAIN global variable is not set above
-    if MY_DOMAIN == '':
-        MY_DOMAIN = input_my_domain()
-        shodan.shodan_query(MY_DOMAIN)
-    else:
-        shodan.shodan_query(MY_DOMAIN)
     
     print(shodan.OUTPUT_LIST)
     print('Generating Unknown Hosts Spreadsheet')
