@@ -220,15 +220,18 @@ class ShodanQuery():
         '''
         # match_string = ''
         # Check CN Field
-        my_cn = response['data'][0]['ssl']['cert']['subject']['CN']
-        if re.search(self.CERT_STR, my_cn):
-            print(f'CN match found for {my_cn}')
-            return True
+        if self.CERT_STR != '':
+            my_cn = response['data'][0]['ssl']['cert']['subject']['CN']
+            if re.search(self.CERT_STR, my_cn):
+                print(f'CN match found for {my_cn}')
+                return True
+            else:
+                is_found = False
+                # check SAN fields of cert for your string
+                is_found = self.check_cert_san(response)
+                return is_found
         else:
-            is_found = False
-            # check SAN fields of cert for your string
-            is_found = self.check_cert_san(response)
-            return is_found
+            return
 
 
     def check_cert_san(self, response):
