@@ -152,6 +152,9 @@ class ShodanQuery():
         associated domain names
         :return:
         '''
+        if self.OTHER_HOSTS == {}:
+            print('No unconfirmed hosts detected\nNot creating an unknown domain spreadsheet.')
+            return
 
         wb = Workbook()
         sheet = wb.active
