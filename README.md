@@ -36,7 +36,7 @@
   <h3 align="center">SNA Autometron</h3>
 
   <p align="center">
-    An awesome README template to jumpstart your projects!
+    Identify Peer IP addresses and Add to the Hostgroup of Your Choice!
     <br />
     <a href="https://github.com/othneildrew/Best-README-Template"><strong>Explore the docs »</strong></a>
     <br />
