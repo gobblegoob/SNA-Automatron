@@ -147,11 +147,26 @@ _Below is an example of how you can instruct your audience on installing and set
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-Ask yourself:
- - What domain am I trying to identify?  
- - What hostgroup do I want to update
+The application needs to know the following bits of information to run.
 
-Then tell that stuff to the app.  
+1. SMC URL and credentials with 
+2. A Secure Network Analytics Query you wish to run - It helps to create this in your SMC so you can hone your report
+3. Shodan API key - requires a free Shodan account
+4. A destination Host Group you want to populate with identified IP addresses - It helps to configure a nested Host Group as a destination which will only be updated dynamically
+6. A domain name you want to search for (IE: ring.com)
+
+To set up:
+ - Add your API key to shodan.json
+ - Add the following data to sna.json
+ SMC hostname/IP and credentials
+ Source/Subject Hostgroups to include and exclude from your query
+ Destination/Peer hostgroups to include and exclude from your query
+ 
+ Optional:
+ You can add values for the following global variables to make it easier to run the application.  These variables are kept in [FILE]
+ 1. <br>MY_DOMAIN</br> - This is the domain you want to search
+ 2. <br>MY_TAG_TO_UPDATE</br> - This is the destination host group - all IP's that match your search criteria will be automatically added to this host group
+ 3. <br>CERT_STR - Sometimes a domain won't be listed in Shodan - this is a regex string you can add to match part of the CN or SAN fields in a site certificate as captured by Shodan.
 
 _For more examples, please refer to the [Documentation](https://example.com)_
 
@@ -211,16 +226,11 @@ Project Link: [https://github.com/gobblegoob/SNA-Automatron](https://github.com/
 ## Acknowledgments
 
 
-Use this space to list resources you find helpful and would like to give credit to. I've included a few of my favorites to kick things off!
+Thank yous
 
-* [Choose an Open Source License](https://choosealicense.com)
-* [GitHub Emoji Cheat Sheet](https://www.webpagefx.com/tools/emoji-cheat-sheet)
-* [Malven's Flexbox Cheatsheet](https://flexbox.malven.co/)
-* [Malven's Grid Cheatsheet](https://grid.malven.co/)
-* [Img Shields](https://shields.io)
-* [GitHub Pages](https://pages.github.com)
-* [Font Awesome](https://fontawesome.com)
-* [React Icons](https://react-icons.github.io/react-icons/search)
+* [denapom11 SNA Examples](https://github.com/CiscoDevNet/stealthwatch-enterprise-sample-scripts)
+* [othneildrew Best README Template](https://github.com/othneildrew/Best-README-Template)
+
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
