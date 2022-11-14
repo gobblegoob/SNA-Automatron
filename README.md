@@ -149,7 +149,7 @@ _Below is an example of how you can instruct your audience on installing and set
 
 The application needs to know the following bits of information to run.
 
-1. SMC URL and credentials with 
+1. SMC URL and credentials 
 2. A Secure Network Analytics Query you wish to run - It helps to create this in your SMC so you can hone your report
 3. Shodan API key - requires a free Shodan account
 4. A destination Host Group you want to populate with identified IP addresses - It helps to configure a nested Host Group as a destination which will only be updated dynamically
