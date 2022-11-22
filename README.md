@@ -118,28 +118,24 @@ This is an example of how to list things you need to use the software and how to
   ```sh
   npm install npm@latest -g
   ```
+-->
 
 ### Installation
 
 _Below is an example of how you can instruct your audience on installing and setting up your app. This template doesn't rely on any external dependencies or services._
 
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
+1. Clone the repo
    ```sh
    git clone https://github.com/gobblegoob/SNA-Automatron.git
    ```
-3. Install NPM packages
+2. Install dependencies from requirements.txt
    ```sh
-   npm install
+   pip install -r requirements.txt
    ```
-4. Enter your API in `config.js`
-   ```js
-   const API_KEY = 'ENTER YOUR API';
-   ```
+3. Obtain an API key for Shodan.  This can be done by creating a free account at https://www.shodan.io
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
--->
 
 <!-- USAGE EXAMPLES -->
 ## Usage
