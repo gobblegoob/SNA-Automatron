@@ -14,27 +14,21 @@ import re
 
 class ShodanQuery():
 
-    BASE_URL = 'https://api.shodan.io/shodan/host/'
-    API_KEY = ""
-    # This is the list of IP addresses you are targeting to add to a hostgroup
-    output_list = []
-    # This is a dict of IP's and associated domains that do not fit the criteria of your search
-    other_hosts = []
-    SRC_IP_LIST = []
-
 
     def __init__(self):
         self.BASE_URL = 'https://api.shodan.io/shodan/host/'
         self.API_KEY = ''
         # This is the list of IP addresses targeted to add to a hostgroup
         self.OUTPUT_LIST = []
+        # this is a list of IP addresses and associated domains that do not fit the criteria of your search
         self.OTHER_HOSTS = []
         self.SRC_IP_LIST = [
             '52.71.205.145',
             '54.205.147.219',
             '100.24.139.212',
             '34.218.87.84',
-            '35.164.169.76'
+            '35.164.169.76',
+            '33.33.22.43'
         ]
         self.CERT_STR = ''
 
@@ -206,11 +200,16 @@ class ShodanQuery():
         
         for host in self.SRC_IP_LIST:
             this = self.get_host(host)
+            # If I receive an error response, ensure that it is captured in the Other Hosts report
+            for key in this.keys():
+                if key == 'error':
+                    q = {host: [this['error']]}
+                    self.OTHER_HOSTS.append(q)
             try:
                 self.find_ip_by_domain(this, my_domain)
             except KeyError as e:
                 print(f'Error looking up {host}\n Shodan may have no data for this IP\n{e}')
-                self.output_list.append(host)
+                self.OTHER_HOSTS.append(host)
         return
 
 
@@ -293,3 +292,5 @@ if __name__ == "__main__":
     for i in sq.OUTPUT_LIST:
         print(f'{i}')
     print('End Output List --------------------')
+    print('---- PRINTING OTHER HOSTS DICTIONARY----')
+    print(json.dumps(sq.OTHER_HOSTS, indent=4))
