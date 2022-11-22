@@ -179,6 +179,7 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 - [ ] Allow for multiple destination hostgroups
 - [ ] Easier user interaction
 - [ ] Simultaneous search for multiple target domains
+- [ ] If no data is found on Shodan for a particular IP address - add that info to the Other Domains Report for further review
 
 
 See the [open issues](https://github.com/othneildrew/Best-README-Template/issues) for a full list of proposed features (and known issues).
