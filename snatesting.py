@@ -87,8 +87,6 @@ if __name__ == '__main__':
 
     
     print(shodan.OUTPUT_LIST)
-    print('Generating Unknown Hosts Spreadsheet')
-    shodan.unknown_host_to_spreadsheet()
     
     # Get my destination tag ID from SNA
     target_tag = tag.get_my_tag_id(tag_update, api.SNA_TAGS)
@@ -99,5 +97,8 @@ if __name__ == '__main__':
     # ip_list = ['34.234.171.45', '52.70.61.48', '52.20.195.83', '34.193.202.53']
     # tag.update_tags(ip_list, api)
     tag.update_tags(shodan.OUTPUT_LIST, api)
+    
+    print('\t------\nGenerating Unknown Hosts Spreadsheet\n\t------')
+    shodan.unknown_host_to_spreadsheet()
 
     quit()
