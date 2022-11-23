@@ -203,7 +203,10 @@ class ShodanQuery():
             # If I receive an error response, ensure that it is captured in the Other Hosts report
             for key in this.keys():
                 if key == 'error':
-                    q = {host: [this['error']]}
+                    q = {
+                            'ip': host,
+                            'domains': [this['error']]
+                        }
                     self.OTHER_HOSTS.append(q)
             try:
                 self.find_ip_by_domain(this, my_domain)
