@@ -101,4 +101,7 @@ if __name__ == '__main__':
     print('\t------\nGenerating Unknown Hosts Spreadsheet\n\t------')
     shodan.unknown_host_to_spreadsheet()
 
+    # End API Session
+    api.end_api_session()
+
     quit()
