@@ -11,6 +11,7 @@ import csv
 import json
 from openpyxl import Workbook
 import re
+import time
 
 class ShodanQuery():
 
@@ -82,6 +83,8 @@ class ShodanQuery():
         try:
             response = requests.request("GET", query, headers=headers, data=payload)
             response = response.json()
+            # Delay 1 second to meet Shodan rate limiting
+            time.sleep(1)
             return response
         except Exception as e:
             print(f'API Query Error: \n {e}')
