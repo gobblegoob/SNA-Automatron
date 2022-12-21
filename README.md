@@ -29,7 +29,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/othneildrew/Best-README-Template">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+    <img src="images/logo.png" alt="Logo" height="80">
   </a>
 
   <h3 align="center">SNA Autometron</h3>
@@ -79,7 +79,6 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
 
 Identifying peer hosts on the internet may be integral to your optimal security posture.  Unfortunately it can be difficult to associate IP addresses with domains.
 
@@ -148,19 +147,32 @@ The application needs to know the following bits of information to run.
 4. A destination Host Group you want to populate with identified IP addresses - It helps to configure a nested Host Group as a destination which will only be updated dynamically
 6. A domain name you want to search for (IE: ring.com)
 
-To set up:
+<p>Before you set up the script - you need to design a Flow Query to identify the target peer IP addresses you want to query Shodan for.  The results of this query will be looked up in Shodan where domain and certificates CN/SANs will be checked to see if they match your targeted domain.  Design and hone your Flow Query in the SNA Flow Query screen.  Once you have designed your query - you can easily transfer the query parameters to the sna.json file.  </p>
+
+<p>Example query:</p> 
+<img src="images/flowsearch.PNG" alt="Example Flow Query">
+
+### To set up:
  - Add your API key to shodan.json
  - Add the following data to sna.json
  SMC hostname/IP and credentials
  Source/Subject Hostgroups to include and exclude from your query
  Destination/Peer hostgroups to include and exclude from your query
  
- Optional:
+ ### Optional:
  You can add values for the following global variables to make it easier to run the application.  These variables are kept in [FILE]
  1. <br>MY_DOMAIN</br> - This is the domain you want to search
  2. <br>MY_TAG_TO_UPDATE</br> - This is the destination host group - all IP's that match your search criteria will be automatically added to this host group
  3. <br>CERT_STR - Sometimes a domain won't be listed in Shodan - this is a regex string you can add to match part of the CN or SAN fields in a site certificate as captured by Shodan.
 
+### Scheduling:
+It may be necessary depending on the domain that you repeat this task.  You can schedule a cron job in linux to execute the script. To run the script at 11pm each day and output a log file for tracking, add the folloiwng to your crontab file:
+```
+00 23 * * * cd /[path/to/file] && python snatesting.py >> tagupdate.log 
+```
+
+- **[Cron Job: A Comprehensive Guide for Beginners 2023](https://www.hostinger.com/tutorials/cron-job)**
+- **[Crontab Generator](https://crontab-generator.org/)**
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -172,7 +184,7 @@ To set up:
 - [ ] Allow for multiple destination hostgroups
 - [ ] Easier user interaction
 - [ ] Simultaneous search for multiple target domains
-- [ ] If no data is found on Shodan for a particular IP address - add that info to the Other Domains Report for further review
+- [x] If no data is found on Shodan for a particular IP address - add that info to the Other Domains Report for further review
 
 
 See the [open issues](https://github.com/othneildrew/Best-README-Template/issues) for a full list of proposed features (and known issues).
