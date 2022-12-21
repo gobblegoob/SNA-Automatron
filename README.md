@@ -96,9 +96,11 @@ Once you have identified the peer domains - you can choose to automatically add 
 
 ### Built With
 
-This section should list any major frameworks/libraries used to bootstrap your project. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
-
 * [Python](https://python.org/)
+
+#### APIs Used
+* [Shodan API Reference](https://developer.shodan.io/api)
+* [Cisco Secure Network Analytics API Reference](https://developer.cisco.com/docs/stealthwatch/enterprise/)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
