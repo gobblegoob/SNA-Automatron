@@ -93,7 +93,7 @@ if __name__ == '__main__':
     print(target_tag)
 
     # Update tags in SNA
-    print(' -- Updating Tags -- ')
+    print(f'\n -- Updating {MY_TAG_TO_UPDATE[0]} with {shodan.OUTPUT_LIST.__len__()} Values -- \n')
     # ip_list = ['34.234.171.45', '52.70.61.48', '52.20.195.83', '34.193.202.53']
     # tag.update_tags(ip_list, api)
     tag.update_tags(shodan.OUTPUT_LIST, api)
