@@ -76,15 +76,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-
-Identifying peer hosts on the internet may be integral to your optimal security posture.  Unfortunately it can be difficult to associate IP addresses with domains.
-
-This project hopes to help manage that difficulty by monitoring unknown peers on the web and using data from Shodan to correlate to a particular domain.  This way you can more easily identify internet based peers your internal hosts are communicating with.
-
-This script will execute flow queries searching for flows from a destingated internal host group searching for unidentified hosts on the web. These peers will be evaluated against Shodan to try and associate a domain with the peer IP addresses.
-
-Once you have identified the peer domains - you can choose to automatically add hosts associated with your target domain(s) to a specified Outside hostrgroup.  In addition, an Excel spreadsheet will be generated identifying the IP addresses and associated domain name(s) of other peer IP's that do not match your given criteria. This can allow you to investigate these connections and drop them in host groups as needed.
-
+Use this to look up Outside Host IP addresses and look for domain data.  That data will allow you to drop those identified IP addresses into your chosen host groups.  
 
 
 <p align="right">(<a href="#top">back to top</a>)</p>
@@ -137,14 +129,24 @@ _Below is an example of how you can instruct your audience on installing and set
 
 <!-- USAGE EXAMPLES -->
 ## Usage
+Usage: ScanToUpdate.py [-h] [-d DOMAIN] [-t TAG] [-c CERTSTRING] [-rx]
 
-The application needs to know the following bits of information to run.
+<table>
+  <tr>
+    <td width = 300>Arguments</td><td width=500>Description</td>
+  </tr>
+  <tr><td>-h, --help</td><td>show this help message and exit</td></tr>
+  <tr><td>-d DOMAIN, --domain DOMAIN</td><td>Domain you wish to search for</td></tr>
+  <tr><td>-t TAG, --tag TAG</td><td>What tag or hostrgroup to you wish to update for the given domain</td></tr>
+  <tr><td>-c CERTSTRING, --certstring CERTSTRING</td><td>Enter a regex match string for cert CN and SAN fields</td></tr>
+  <tr><td>-rx, --reportxlsx</td><td>Output unknown domains to an excel file</td></tr>
+</table>
 
-1. SMC URL and credentials 
-2. A Secure Network Analytics Query you wish to run - It helps to create this in your SMC so you can hone your report
-3. Shodan API key - requires a free Shodan account
-4. A destination Host Group you want to populate with identified IP addresses - It helps to configure a nested Host Group as a destination which will only be updated dynamically
-6. A domain name you want to search for (IE: ring.com)
+  
+The application will perform the following tasks:
+1. Execute a Flow Query on SNA per the query parameters you apply in the sna.json file
+2. With the results from the flow query, it will query shodan for domain or certificate CN and SAN field data to try and identify a public IP
+3. Will then take the IP's that correspond to your target domains and insert them into your designated Host Group/Tag
 
 <p>Before you set up the script - you need to design a Flow Query to identify the target peer IP addresses you want to query Shodan for.  The results of this query will be looked up in Shodan where domain and certificates CN/SANs will be checked to see if they match your targeted domain.  Design and hone your Flow Query in the SNA Flow Query screen.  Once you have designed your query - you can easily transfer the query parameters to the sna.json file.  </p>
 
@@ -154,9 +156,9 @@ The application needs to know the following bits of information to run.
 ### To set up:
  - Add your API key to shodan.json
  - Add the following data to sna.json
- SMC hostname/IP and credentials
- Source/Subject Hostgroups to include and exclude from your query
- Destination/Peer hostgroups to include and exclude from your query
+ <li>SMC hostname/IP and credentials
+ <li>Source/Subject Hostgroups to include and exclude from your query
+ <li>Destination/Peer hostgroups to include and exclude from your query
  
  ### Optional:
  You can add values for the following global variables to make it easier to run the application.  These variables are kept in [FILE]
@@ -165,9 +167,11 @@ The application needs to know the following bits of information to run.
  3. <br>CERT_STR - Sometimes a domain won't be listed in Shodan - this is a regex string you can add to match part of the CN or SAN fields in a site certificate as captured by Shodan.
 
 ### Scheduling:
-It may be necessary depending on the domain that you repeat this task.  You can schedule a cron job in linux to execute the script. To run the script at 11pm each day and output a log file for tracking, add the folloiwng to your crontab file:
+The best way to run this is to run cronjobs calling the scripts wiht the accompanying arguments.  This allows you to run the script against several domains and populate several different host groups without making any changes to code.  You can schedule a cron job in linux to execute the script. To run the script at 11pm each day and output a log file for tracking, add the folloiwng to your crontab file:
 ```
-00 23 * * * cd /[path/to/file] && python snatesting.py >> tagupdate.log 
+00 23 * * * cd /[path/to/file] && python ScanToUpdate.py -d [DOMAIN.COM] -t [HOSTGROUP TO UPDATE] -c [REGEX TO SEARCH IN CERT CN OR SAN FIELD] >> tagupdate.log 
+20 23 * * * cd /[path/to/file] && python ScanToUpdate.py -d [DOMAIN2.COM] -t [HOSTGROUP TO UPDATE] -c [REGEX TO SEARCH IN CERT CN OR SAN FIELD] >> tagupdate.log 
+40 23 * * * cd /[path/to/file] && python ScanToUpdate.py -d [DOMAIN3.COM] -t [HOSTGROUP TO UPDATE] -c [REGEX TO SEARCH IN CERT CN OR SAN FIELD] -rx >> tagupdate.log 
 ```
 
 - **[Cron Job: A Comprehensive Guide for Beginners 2023](https://www.hostinger.com/tutorials/cron-job)**
@@ -181,8 +185,7 @@ It may be necessary depending on the domain that you repeat this task.  You can 
 ## Roadmap
 
 - [ ] Allow for multiple destination hostgroups
-- [ ] Easier user interaction
-- [ ] Simultaneous search for multiple target domains
+- [ ] Store data structure for Shodan Results so no repeated Shodan queries have to be made for the same data.  Will shorten execution time as well
 - [x] If no data is found on Shodan for a particular IP address - add that info to the Other Domains Report for further review
 
 
