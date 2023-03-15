@@ -1,0 +1,20 @@
+{
+    "_comment1": "Add your SMC hostname and user credentials here.  User must have at least Power Analyst privileges",
+    "SMC_USER": "",
+    "SMC_PASSWORD": "",
+    "SMC_HOST": "https://smc.domain.com",
+
+    "TAGS": {
+        "_comment2": "These identify the host groups for your flow query.",
+        "SOURCE_TAG_NAMES": {
+            "_comment3": "Add the internal host group whose connections you wish to monitor",
+            "INCLUDE": ["Inside"],
+            "EXCLUDE": [""]
+        },
+        "DESTINATION_TAG_NAMES": {
+            "_comment4": "Add the peer networks - be sure to exclude your destination networks you already know about",
+            "INCLUDE": ["Outside Hosts"],
+            "EXCLUDE": []
+        }
+    }
+}
