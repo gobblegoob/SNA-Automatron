@@ -133,7 +133,7 @@ Usage: ScanToUpdate.py [-h] [-d DOMAIN] [-t TAG] [-c CERTSTRING] [-rx]
 
 <table>
   <tr>
-    <td width = 300>**Arguments**</td><td width=500>**Description**</td>
+    <td width = 300><b>Arguments</b></td><td width=500><b>Description</b></td>
   </tr>
   <tr><td>-h, --help</td><td>show this help message and exit</td></tr>
   <tr><td>-d DOMAIN, --domain DOMAIN</td><td>Domain you wish to search for</td></tr>
