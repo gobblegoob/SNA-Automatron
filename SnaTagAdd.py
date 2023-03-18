@@ -52,7 +52,12 @@ class SnaTagAdd():
             return data['data']
         else:
             print(f'Error getting tag data {r.status_code}')
-            quit()
+            if r.status_code == 401:
+                print(f'Session timed out.  Attempting to reauthenticate session ')
+                return False
+            else:
+                print('Closing the program')
+                quit()
 
     
     def dedup_list(self, l):
@@ -86,6 +91,10 @@ class SnaTagAdd():
         url = sna_session.BASE_URL + '/smc-configuration/rest/v1/tenants/' + sna_session.SNA_TENANT + '/tags/' + str(self.MY_TAG_ID)
 
         payload = self.get_tag_data(url, my_session)
+
+        # Validate session is still active, return false if the session cookie is expired
+        if payload is False:
+            return False
 
         updated_ranges = payload['ranges']
         for ip in ip_list:
