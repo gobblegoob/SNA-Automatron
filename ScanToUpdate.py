@@ -142,7 +142,11 @@ if __name__ == '__main__':
 
     # Update tags in SNA
     print(f'\n -- Updating {MY_TAG_TO_UPDATE[0]} ID:{target_tag} with {shodan.OUTPUT_LIST.__len__()} Values -- \n')
-    tag.update_tags(shodan.OUTPUT_LIST, api)
+
+    # Before attempting to update tags, validate that a session cookie is still valid
+    if tag.update_tags(shodan.OUTPUT_LIST, api) is False:
+        api.session_authc()
+        tag.update_tags(shodan.OUTPUT_LIST, api)
 
     if args.reportxlsx:
         print('\t------\nGenerating Unknown Hosts Spreadsheet\n\t------')
