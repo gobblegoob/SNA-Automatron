@@ -122,7 +122,7 @@ class SnaQuery():
         # This line dictates how far back the flow query would go
         # 1440 minutes = 24 hours
         # Shorten for quicker tests
-        start_datetime = end_datetime - datetime.timedelta(minutes=60)
+        start_datetime = end_datetime - datetime.timedelta(minutes=1440)
         end_timestamp = end_datetime.strftime('%Y-%m-%dT%H:%M:%SZ')
         start_timestamp = start_datetime.strftime('%Y-%m-%dT%H:%M:%SZ')
 
