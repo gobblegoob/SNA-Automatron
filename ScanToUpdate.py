@@ -117,6 +117,8 @@ if __name__ == '__main__':
 
     api.sna_session_init('sna.json')
     query.set_sna_json('sna.json')
+    qname = f'{MY_DOMAIN} Flow Query'
+    query.set_query_name(qname)
     query.init_query(api.SNA_TAGS)
 
     # execute the query - needs the api object we created to complete this
