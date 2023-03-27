@@ -29,6 +29,7 @@ class SnaQuery():
         # Dictionary with the query payload 
         self.FLOW_QUERY = {}
 
+        self.QUERY_NAME = 'My Automated Flow Query'
 
     def set_sna_json(self, fn):
         '''
@@ -121,7 +122,7 @@ class SnaQuery():
         # This line dictates how far back the flow query would go
         # 1440 minutes = 24 hours
         # Shorten for quicker tests
-        start_datetime = end_datetime - datetime.timedelta(minutes=5)
+        start_datetime = end_datetime - datetime.timedelta(minutes=60)
         end_timestamp = end_datetime.strftime('%Y-%m-%dT%H:%M:%SZ')
         start_timestamp = start_datetime.strftime('%Y-%m-%dT%H:%M:%SZ')
 
@@ -129,6 +130,7 @@ class SnaQuery():
         self.FLOW_QUERY['endDateTime'] = end_timestamp
 
         # Set the query parameters peer and subject tag ids
+        self.FLOW_QUERY['searchName'] = self.QUERY_NAME
         self.FLOW_QUERY['subject']['hostGroups']['includes'] = self.SOURCE_TAG_ID_INCLUDE
         self.FLOW_QUERY['subject']['hostGroups']['excludes'] = self.SOURCE_TAG_ID_EXCLUDE
         self.FLOW_QUERY['peer']['hostGroups']['includes'] = self.DEST_TAG_ID_INCLUDE
@@ -199,6 +201,19 @@ class SnaQuery():
         self.create_flow_query()
         
         return
+    
+
+    def set_query_name(self, qname):
+        '''
+        Can set the name of the query so it shows up in logs
+        :arg: str - Name of query
+        :return:
+        '''
+        if qname is not None:
+            self.QUERY_NAME = qname
+            return
+        else:
+            return
 
 
 if __name__ == '__main__':
