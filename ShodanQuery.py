@@ -24,12 +24,12 @@ class ShodanQuery():
         # this is a list of IP addresses and associated domains that do not fit the criteria of your search
         self.OTHER_HOSTS = []
         self.SRC_IP_LIST = [
-            '52.71.205.145',
-            '54.205.147.219',
-            '100.24.139.212',
-            '34.218.87.84',
-            '35.164.169.76',
-            '33.33.22.43'
+            '17.253.11.200',
+            '3.217.147.217',
+            '8.8.8.8',
+            '17.248.190.70',
+            '34.194.167.237',
+            '23.203.120.24'
         ]
         self.CERT_STR = ''
 
@@ -237,6 +237,48 @@ class ShodanQuery():
         return
 
 
+    def shodan_persistant_query(self):
+        '''
+        A query that creates a persistant file of truncated shodan results
+        :arg: str
+        :return: boolean
+        '''
+        self.get_cred_json('shodan.json')
+        my_dict = {}
+
+        total = self.SRC_IP_LIST.__len__()
+        p = 1
+
+        print(f'Searching Shodan for {total} unique IPs')
+
+        for host in self.SRC_IP_LIST:
+
+            self.progress_bar(p, total)
+            p += 1
+
+            h = self.get_host(host)
+            for key in h.keys():
+                cert_cn = ''
+                cert_san = ''
+                if key == "error":
+                    continue
+                else:
+                    domains = h['domains']
+                    try:
+                        cert_cn = h['data'][0]['ssl']['cert']['subject']['CN']
+                        for i in h['data'][0]['ssl']['cert']['extensions']:
+                            if i['name'] == 'subjectAltName':
+                                cert_san = i['data']
+                        my_dict[host] = {'domains': domains, 'cert_cn': cert_cn, 'cert_san': cert_san}
+                        continue
+                    except KeyError:
+                        my_dict[host] = {'domains': domains}
+            
+        with open('shodanresult.json', 'w') as my_file:
+             my_file.write(json.dumps(my_dict))
+             return True
+
+
     def check_cert_cn(self, response):
         '''
         Check the response for a certificate - CN then SAN fields for a specific string
@@ -299,7 +341,8 @@ if __name__ == "__main__":
     # Comment this line out for testing
     # sq.get_ip_list()
 
-    sq.shodan_query('ring.com')
+    #sq.shodan_query('ring.com')
+    sq.shodan_persistant_query()
     '''
     for host in sq.SRC_IP_LIST:
         this = sq.get_host(host)
