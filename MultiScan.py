@@ -9,15 +9,17 @@ from ShodanQuery import ShodanQuery
 from SnaTagAdd import SnaTagAdd
 from datetime import datetime
 from colorama import Fore, Style
+import os
 import json
 import re
 import argparse
+import pandas as pd
 
 MY_DATA = {
-    'example.com': {
-        'certstr': '',
-        'destinationtag': ''
-    },
+    'domain.com': {
+        'certstr': 'something',
+        'destinationtag': 'a host group'
+    }
 }
 
 OTHER_HOSTS = []
@@ -61,7 +63,24 @@ def cert_check(host, certstr):
             # print(f'{Fore.GREEN}SAN match found for {host["cert_san"]}{Style.RESET_ALL}')
             return True
     return False
-   
+
+
+def delete_file(f):
+    '''
+    :arg: str - filename
+    :return: boolean
+    '''
+    try:
+        os.remove(f)
+        return True
+    except FileNotFoundError as e:
+        print(f'{Fore.LIGHTRED_EX}Unable to delete {f}\n{e}{Style.RESET_ALL}')
+        return
+
+
+def other_domain_report(i):
+    pass
+
 
 if __name__ == '__main__':
     # initialize our classes
@@ -74,6 +93,25 @@ if __name__ == '__main__':
     print(get_friendly_date())
     print(Style.RESET_ALL)
     starttime = datetime.now()
+    delete_file('shodanresult.json' )
+
+    helptext = (
+        'Get domain info from Shodan and update hostgroups in Secure Network Analytics automatically'
+    )
+
+    parser = argparse.ArgumentParser(description=helptext)
+
+    parser.add_argument('-l', '--log', action='store_true', help='Add output to log file')
+    parser.add_argument('-rx', '--reportxlsx', action='store_true', help='Output Unidentified Domain data to xlsx report file')
+    parser.add_argument('-t', '--time', type=int, help='Report time in minutes.  Default is 1440 (24 hours)')
+    parser.add_argument('-ld', '--listdomains', action='store_true', help='List domains and destination host groups')
+
+    args = parser.parse_args()
+    if args.log:
+        logging = True
+
+    if args.time:
+        QUERY_TIME = args.time 
 
     # Start API session on SNA
     api.sna_session_init('sna.json')
@@ -105,18 +143,27 @@ if __name__ == '__main__':
                     HOST_IP = key
                     dlist = r[HOST_IP]['domains']
                     
+                    q = {
+                        'ip': HOST_IP,
+                        'domains': dlist
+                    }
+
+                    OTHER_HOSTS.append(q)
+
                     for d in dlist:
                         if d == DOMAIN:
                             HOST_LIST.append(HOST_IP)
+                            OTHER_HOSTS.remove(q)
                             break
                         else:
                             continue
                     if cert_check(r[HOST_IP], CERT_STR) is True:
                         HOST_LIST.append(HOST_IP)
+                        OTHER_HOSTS.remove(q)
                     else:
-                        OTHER_HOSTS.append(HOST_IP)
-                except KeyError:
-                    OTHER_HOSTS.append(HOST_IP)
+                        continue
+                except KeyError as e:
+                    continue
 
             print(f'{Fore.LIGHTYELLOW_EX}{DOMAIN} Host List:\n{HOST_LIST}{Style.RESET_ALL}')
 
@@ -138,6 +185,16 @@ if __name__ == '__main__':
         print('Unable to locate shodan result file')
         
     api.end_api_session()
+    delete_file('shodanresult.json')
+
+    if args.reportxlsx == True:
+        today = datetime.today()
+        filename = f'{str(today.year)}_{str(today.month)}_{str(today.day)}_OtherDomainsReport.xlsx'
+        df = pd.DataFrame.from_dict(OTHER_HOSTS)
+        df = df.drop_duplicates(subset=['ip'], keep='first')
+        df.to_excel(filename, index=False, freeze_panes=(1,0))
+        pass
+
     print(f'\nTask Completed: {get_friendly_date()}')
     endtime = datetime.now()
     print(f'Time Elapesed: {endtime - starttime}\n')
