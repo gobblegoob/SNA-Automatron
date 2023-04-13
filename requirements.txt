@@ -1,2 +1,3 @@
 openpyxl>=3.0.9
 requests>=2.18.4
+pandas>=2.0
