@@ -15,14 +15,33 @@ import re
 import argparse
 import pandas as pd
 
+# Your search info.
+'''
+certstr = CN or SAN text to match with regex
+destinationtag = Your destination hostgroup
+'''
 MY_DATA = {
-    'domain.com': {
-        'certstr': 'something',
-        'destinationtag': 'a host group'
+    'domain1.com': {
+        'certstr': 'Cert CN or SAN Regex',
+        'destinationtag': 'Name of Hostgroup'
+    },
+    'domain2.com': {
+        'certstr': 'Cert CN or SAN regex',
+        'destinationtag': 'Name of another Hostgroup'
     }
 }
 
 OTHER_HOSTS = []
+CLEANUP_HOSTS = [] # IP's to clear from other hosts report
+
+
+def list_domains():
+    '''
+    Print a list of domains and destination tags
+    '''
+    print(json.dumps(MY_DATA, indent=4))
+    quit()
+    
 
 def get_friendly_date():
     '''
@@ -78,8 +97,16 @@ def delete_file(f):
         return
 
 
-def other_domain_report(i):
-    pass
+def cleanup_report(df):
+    '''
+    Identified hosts will be removed from the other domain reports
+    :arg: Pandas Dataframe
+    :return: DataFrame
+    '''
+    for i in CLEANUP_HOSTS:
+        row = df.loc[df['ip'] == i]
+        df = df.drop(row.index, axis = 0)
+    return df
 
 
 if __name__ == '__main__':
@@ -93,7 +120,7 @@ if __name__ == '__main__':
     print(get_friendly_date())
     print(Style.RESET_ALL)
     starttime = datetime.now()
-    delete_file('shodanresult.json' )
+    delete_file('shodanresult.json')
 
     helptext = (
         'Get domain info from Shodan and update hostgroups in Secure Network Analytics automatically'
@@ -109,9 +136,11 @@ if __name__ == '__main__':
     args = parser.parse_args()
     if args.log:
         logging = True
+        print('Unable to support logging at this time')
 
     if args.time:
-        QUERY_TIME = args.time 
+        QUERY_TIME = args.time
+        print('Unable to set query time in this version')
 
     # Start API session on SNA
     api.sna_session_init('sna.json')
@@ -178,8 +207,10 @@ if __name__ == '__main__':
             if addtag.update_tags(HOST_LIST, api) is False:
                 api.session_authc()
                 addtag.update_tags(HOST_LIST, api)
+                
+            for i in HOST_LIST:
+                    CLEANUP_HOSTS.append(i)
 
-        #print(f'\nUnmatched IPs \n{OTHER_HOSTS}')
 
     else:
         print('Unable to locate shodan result file')
@@ -192,6 +223,7 @@ if __name__ == '__main__':
         filename = f'{str(today.year)}_{str(today.month)}_{str(today.day)}_OtherDomainsReport.xlsx'
         df = pd.DataFrame.from_dict(OTHER_HOSTS)
         df = df.drop_duplicates(subset=['ip'], keep='first')
+        df = cleanup_report(df)
         df.to_excel(filename, index=False, freeze_panes=(1,0))
         pass
 
