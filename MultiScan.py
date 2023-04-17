@@ -39,9 +39,10 @@ def list_domains():
     '''
     Print a list of domains and destination tags
     '''
-    print(json.dumps(MY_DATA, indent=4))
+    print(f'{Fore.LIGHTGREEN_EX} -- My Search Data --\n')
+    print(f'{json.dumps(MY_DATA, indent=4)}{Style.RESET_ALL}')
     quit()
-    
+
 
 def get_friendly_date():
     '''
@@ -93,7 +94,7 @@ def delete_file(f):
         os.remove(f)
         return True
     except FileNotFoundError as e:
-        print(f'{Fore.LIGHTRED_EX}Unable to delete {f}\n{e}{Style.RESET_ALL}')
+        # print(f'{Fore.LIGHTRED_EX}Unable to delete {f}\n{e}{Style.RESET_ALL}')
         return
 
 
@@ -120,7 +121,6 @@ if __name__ == '__main__':
     print(get_friendly_date())
     print(Style.RESET_ALL)
     starttime = datetime.now()
-    delete_file('shodanresult.json')
 
     helptext = (
         'Get domain info from Shodan and update hostgroups in Secure Network Analytics automatically'
@@ -131,7 +131,7 @@ if __name__ == '__main__':
     parser.add_argument('-l', '--log', action='store_true', help='Add output to log file')
     parser.add_argument('-rx', '--reportxlsx', action='store_true', help='Output Unidentified Domain data to xlsx report file')
     parser.add_argument('-t', '--time', type=int, help='Report time in minutes.  Default is 1440 (24 hours)')
-    parser.add_argument('-ld', '--listdomains', action='store_true', help='List domains and destination host groups')
+    parser.add_argument('-ld', '--listdomains', action='store_true', help='List domains, cert strings to search, and destination host groups')
 
     args = parser.parse_args()
     if args.log:
@@ -140,7 +140,14 @@ if __name__ == '__main__':
 
     if args.time:
         QUERY_TIME = args.time
-        print('Unable to set query time in this version')
+        print(f'{Fore.GREEN}Flow Query set to {QUERY_TIME} minutes.\n{Fore.RESET}')
+        query.QUERY_TIME = QUERY_TIME
+
+
+    if args.listdomains == True:
+        list_domains()
+
+    delete_file('shodanresult.json')
 
     # Start API session on SNA
     api.sna_session_init('sna.json')
