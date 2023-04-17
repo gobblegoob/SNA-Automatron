@@ -30,6 +30,7 @@ class SnaQuery():
         self.FLOW_QUERY = {}
 
         self.QUERY_NAME = 'My Automated Flow Query'
+        self.QUERY_TIME = 1440  # Default minutes for flow query scan. 24 hours.
 
     def set_sna_json(self, fn):
         '''
@@ -122,7 +123,7 @@ class SnaQuery():
         # This line dictates how far back the flow query would go
         # 1440 minutes = 24 hours
         # Shorten for quicker tests
-        start_datetime = end_datetime - datetime.timedelta(minutes=1440)
+        start_datetime = end_datetime - datetime.timedelta(minutes=self.QUERY_TIME)
         end_timestamp = end_datetime.strftime('%Y-%m-%dT%H:%M:%SZ')
         start_timestamp = start_datetime.strftime('%Y-%m-%dT%H:%M:%SZ')
 
