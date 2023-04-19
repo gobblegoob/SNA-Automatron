@@ -112,8 +112,6 @@ This is an example of how to list things you need to use the software and how to
 
 ### Installation
 
-_Below is an example of how you can instruct your audience on installing and setting up your app. This template doesn't rely on any external dependencies or services._
-
 1. Clone the repo
    ```sh
    git clone https://github.com/gobblegoob/SNA-Automatron.git
@@ -129,6 +127,10 @@ _Below is an example of how you can instruct your audience on installing and set
 
 <!-- USAGE EXAMPLES -->
 ## Usage
+
+###ScanToUPdate.py
+
+used to scan a single domain<br><br>
 Usage: ScanToUpdate.py [-h] [-d DOMAIN] [-t TAG] [-c CERTSTRING] [-rx]
 
 <table>
@@ -142,7 +144,37 @@ Usage: ScanToUpdate.py [-h] [-d DOMAIN] [-t TAG] [-c CERTSTRING] [-rx]
   <tr><td>-rx, --reportxlsx</td><td>Output unknown domains to an excel file</td></tr>
 </table>
 
-  
+###MultiScan.py
+used to scan for many domains and put the results in the specified host groups<br><br>
+Usage: MultiScan.py [-h] [-l] [-rx] [-t TIME] [-ld]
+
+<table>
+  <tr>
+    <td width = 300><b>Arguments</b></td><td width=500><b>Description</b></td>
+  </tr>
+  <tr><td>-h, --help</td><td>show this help message and exit</td></tr>
+  <tr><td>-l, --log</td><td>Add output to a log file (Not yet functional</td></tr>
+  <tr><td>-rx, --reportxlsx</td><td>Output unknown domains to an excel file</td></tr>
+  <tr><td>-t TIME, --time TIME</td><td>Flow report time in minutes.  Default is 1440 (24 hours)</td></tr>
+  <tr><td>-ld, --listdomains</td><td>List domains to scan</td></tr>
+</table>
+
+You must esignate your domains, cert strings, and destination hostgroups in MultiScan.py by editing the MY_DATA dictionary.  The dictionary is formatted as below
+```
+MY_DATA = {
+    'domain1.com': {
+        'certstr': 'Cert CN or SAN Regex',
+        'destinationtag': 'Name of Hostgroup'
+    },
+    'domain2.com': {
+        'certstr': 'Cert CN or SAN regex',
+        'destinationtag': 'Name of another Hostgroup'
+    }
+}
+...
+```
+
+### Setup
 The application will perform the following tasks:
 1. Execute a Flow Query on SNA per the query parameters you apply in the sna.json file
 2. With the results from the flow query, it will query shodan for domain or certificate CN and SAN field data to try and identify a public IP
@@ -150,7 +182,7 @@ The application will perform the following tasks:
 
 <p>Before you set up the script - you need to design a Flow Query to identify the target peer IP addresses you want to query Shodan for.  The results of this query will be looked up in Shodan where domain and certificates CN/SANs will be checked to see if they match your targeted domain.  Design and hone your Flow Query in the SNA Flow Query screen.  Once you have designed your query - you can easily transfer the query parameters to the sna.json file.  </p>
 
-<p>Example query:</p> 
+<p>**Example query:**</p> 
 <img src="images/flowsearch.PNG" alt="Example Flow Query">
 
 ### To set up:
@@ -184,9 +216,7 @@ The best way to run this is to run cronjobs calling the scripts wiht the accompa
 <!-- ROADMAP -->
 ## Roadmap
 
-- [ ] Allow for multiple destination hostgroups
-- [ ] Store data structure for Shodan Results so no repeated Shodan queries have to be made for the same data.  Will shorten execution time as well
-- [x] If no data is found on Shodan for a particular IP address - add that info to the Other Domains Report for further review
+- [ ] generate log file
 
 
 See the [open issues](https://github.com/othneildrew/Best-README-Template/issues) for a full list of proposed features (and known issues).
@@ -198,16 +228,7 @@ See the [open issues](https://github.com/othneildrew/Best-README-Template/issues
 <!-- CONTRIBUTING -->
 ## Contributing
 
-Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
-
-If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
-Don't forget to give the project a star! Thanks again!
-
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+If you wish to contribute or have feature or usage suggestions, leave me a message.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
