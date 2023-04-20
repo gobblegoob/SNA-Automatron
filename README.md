@@ -128,9 +128,9 @@ This is an example of how to list things you need to use the software and how to
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-###ScanToUPdate.py
+### ScanToUPdate.py
 
-used to scan a single domain<br><br>
+Use this to scan for a single domain to update a single host tag.  Allows you to make a more specific Flow Query to keep the number of Shodan api lookups down.<br><br>
 Usage: ScanToUpdate.py [-h] [-d DOMAIN] [-t TAG] [-c CERTSTRING] [-rx]
 
 <table>
@@ -144,8 +144,8 @@ Usage: ScanToUpdate.py [-h] [-d DOMAIN] [-t TAG] [-c CERTSTRING] [-rx]
   <tr><td>-rx, --reportxlsx</td><td>Output unknown domains to an excel file</td></tr>
 </table>
 
-###MultiScan.py
-used to scan for many domains and put the results in the specified host groups<br><br>
+### MultiScan.py
+Use this to search many domains and update many host groups.  Will require a more generalized flow query so there may be more Shodan queries resulting in longer run time.<br><br>
 Usage: MultiScan.py [-h] [-l] [-rx] [-t TIME] [-ld]
 
 <table>
@@ -182,7 +182,7 @@ The application will perform the following tasks:
 
 <p>Before you set up the script - you need to design a Flow Query to identify the target peer IP addresses you want to query Shodan for.  The results of this query will be looked up in Shodan where domain and certificates CN/SANs will be checked to see if they match your targeted domain.  Design and hone your Flow Query in the SNA Flow Query screen.  Once you have designed your query - you can easily transfer the query parameters to the sna.json file.  </p>
 
-<p>**Example query:**</p> 
+<p> ** Example query: ** </p> 
 <img src="images/flowsearch.PNG" alt="Example Flow Query">
 
 ### To set up:
