@@ -189,13 +189,11 @@ if __name__ == '__main__':
                     for d in dlist:
                         if d == DOMAIN:
                             HOST_LIST.append(HOST_IP)
-                            OTHER_HOSTS.remove(q)
                             break
                         else:
                             continue
                     if cert_check(r[HOST_IP], CERT_STR) is True:
                         HOST_LIST.append(HOST_IP)
-                        OTHER_HOSTS.remove(q)
                     else:
                         continue
                 except KeyError as e:
