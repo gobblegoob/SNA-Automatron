@@ -82,10 +82,17 @@ class ShodanQuery():
         }
         try:
             response = requests.request("GET", query, headers=headers, data=payload)
-            response = response.json()
-            # Delay 1 second to meet Shodan rate limiting
-            time.sleep(1)
-            return response
+            if response.status_code == 200:
+                response = response.json()
+                # Delay 1 second to meet Shodan rate limiting
+                time.sleep(1)
+                return response
+            elif response.status_code == 401:
+                print(f'\nShodan Error: {response.reason}\nCheck API Key in shodan.json')
+                quit()
+            else:
+                response = response.json()
+                return response
         except Exception as e:
             print(f'API Query Error: \n {e}')
 
