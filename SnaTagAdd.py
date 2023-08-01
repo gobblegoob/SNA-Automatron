@@ -45,6 +45,8 @@ class SnaTagAdd():
         '''
         In order to update a tag - we must pull the tag data to create the payload
         :arg: int tag id
+        :arg: SnaAPISession object
+        :return: dict Tag Data
         '''
         response_headers = {
             'Content-type': 'application/json',
