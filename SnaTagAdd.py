@@ -118,6 +118,51 @@ class SnaTagAdd():
             print(f'There was an error updating the host group {self.MY_TAG_NAME}\n{r.status_code}')
     
         return
+    
+
+    def update_tag_with_removals(self, ip_list, sna_session):
+        '''
+        Updates a hostgroup while removing stale entries
+        :arg: list - ip list
+        :arg: object - sna session object
+        '''
+
+        request_headers = {
+            'Content-type': 'application/json',
+            'Accept': 'application/json'
+        }
+        my_session = sna_session.API_SESSION
+
+        # Do not continue if MY_TAG_ID is unset.  This is probably due to an invalid destination tag selected 
+        if self.MY_TAG_ID == '':
+            print(f'The destination tag {self.MY_TAG_NAME} is likely invalid.  Unable to update Tag.')
+            return
+
+        url = sna_session.BASE_URL + '/smc-configuration/rest/v1/tenants/' + sna_session.SNA_TENANT + '/tags/' + str(self.MY_TAG_ID)
+
+        payload = self.get_tag_data(url, my_session)
+
+        # Validate session is still active, return false if the session cookie is expired
+        if payload is False:
+            return False
+
+        updated_ranges = payload['ranges']
+        for ip in ip_list:
+            updated_ranges.append(ip)
+        updated_ranges = self.dedup_list(updated_ranges)
+
+        payload['ranges'] = ip_list
+        
+        r = my_session.request('PUT', url, verify=False, data=json.dumps(payload), headers=request_headers )
+
+        if r.status_code == 200:
+            print(f'Tag {self.MY_TAG_NAME} is updated!')
+
+        else:
+            print(f'There was an error updating the host group {self.MY_TAG_NAME}\n{r.status_code}')
+    
+        return
+
 
 if __name__ == '__main__':
     tag = SnaTagAdd()
