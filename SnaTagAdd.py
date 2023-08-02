@@ -146,11 +146,6 @@ class SnaTagAdd():
         if payload is False:
             return False
 
-        updated_ranges = payload['ranges']
-        for ip in ip_list:
-            updated_ranges.append(ip)
-        updated_ranges = self.dedup_list(updated_ranges)
-
         payload['ranges'] = ip_list
         
         r = my_session.request('PUT', url, verify=False, data=json.dumps(payload), headers=request_headers )
