@@ -125,8 +125,8 @@ if __name__ == '__main__':
     api = SnaAPISession()
     tagupdate = SnaTagAdd()
     
-    SEARCH_STRING = 'box'  #This is the search string that we want to validate in the certificates we check
-    TARGET_TAG = 'MyTestHG'  # Tag to clean up
+    SEARCH_STRING = ''  #This is the search string that we want to validate in the certificates we check
+    TARGET_TAG = ''  # Tag to clean up
     TARGET_TAG_ID= '' 
 
     print(f'{Fore.LIGHTYELLOW_EX}-' * 80)
