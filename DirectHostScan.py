@@ -2,6 +2,12 @@
     Directly queries websites for their certificates
     The certificate CN and SAN fields are used to identify
     external hosts that are connected to by local hosts.
+
+    Then uses that information to populate designated SNA Hostgroups based on 
+    specified search criteria.
+
+    Connections that were not designated and errors will populate an excel 
+    report for review.
 '''
 
 from SnaAPISession import SnaAPISession
@@ -11,10 +17,12 @@ from OpenSSL import crypto
 import ssl, socket
 from colorama import Fore, Style
 import re
+from datetime import datetime
+import pandas as pd
 import pprint
 import json
 
-undesignated_hosts = [] # A list of hosts and host data that is not assigned to a designated hostgroup
+UNDESIGNATED_HOSTS = [] # A list of hosts and host data that is not assigned to a designated hostgroup
 
 def get_certificate(host, port=443, timeout=2):
     # Need to use an unverified context.
@@ -72,11 +80,15 @@ def print_results(url_dict):
     :return:
     '''
     for key in url_dict:
-        print(f' Host: {key}')
-        print(url_dict[key]['subject'][b'CN'])
-        print(url_dict[key][b'subjectAltName'])
-        print(url_dict[key]['serialNumber'])
-        print('=' * 80)
+        try:
+            print(f'Host: {key}')
+            print(url_dict[key]['subject'][b'CN'])
+            print(url_dict[key][b'subjectAltName'])
+            print(url_dict[key]['serialNumber'])
+            print('=' * 80)
+        except Exception as e:
+            print(f'{Fore.RED}Print Result Error: \nHost: {key}\t{e}')
+            continue
     return
 
 
@@ -87,7 +99,7 @@ def parse_data(url_dict):
     :return:
     '''
     tags = SnaTagAdd()
-    global undesignated_hosts
+    global UNDESIGNATED_HOSTS
 
     for hg in search_data:
         tags.get_my_tag_id(hg, api.SNA_TAGS)
@@ -95,16 +107,13 @@ def parse_data(url_dict):
         for host in url_dict:
             try:
                 host_cn = str(url_dict[host]['subject'][b'CN'])
+            except KeyError:
+                host_cn = f'No CN'
+                continue
+            try:
                 host_san = str(url_dict[host][b'subjectAltName'])
-                #print(f'{host_cn} is a {type(host_cn)}')
-                #print(f'{host_san} is a {type(host_san)}')
-            except KeyError as e:
-                undesignated_hosts.append(
-                    {
-                        'host': host,
-                        'error': e
-                    }
-                )
+            except KeyError:
+                host_san = f'No SAN'
                 continue
 
             if re.search(search_data[hg]['url'], host):
@@ -120,7 +129,7 @@ def parse_data(url_dict):
                 ip_list.append(host)
                 continue
             else: 
-                undesignated_hosts.append(
+                UNDESIGNATED_HOSTS.append(
                     {
                         'host': host,
                         'host_cn': host_cn,
@@ -134,20 +143,28 @@ def parse_data(url_dict):
     return
 
 
-def excel_report():
+def excel_report(data):
     '''
     Print a report of a series of hosts to an outlook file for review
-    :arg:
-    :return:
+    :arg: dict
+    :return: boolean
     '''
-    return
+    try:
+        today = datetime.today()
+        filename = f'{str(today.year)}_{str(today.month)}_{str(today.day)}_DirectHostScan Unknown Report.xlsx'
+        df = pd.DataFrame.from_dict(data)
+        #print(df.to_string())
+        df.to_excel(filename, index=False, freeze_panes=(1,0))
+        return
+    except Exception as e:
+        print(f'Error creating log file. {e}')
 
 if __name__ == '__main__':
     # Hostgroups and search strings
     search_data = {
         'Dynamic Ring IPs': {
             'url': 'ring.com',
-            'search_string': 'ring.devices'
+            'search_string': '(ring\.com)|(ring\.devices)'
         },
         'Webex': {
             'url': 'webex.com',
@@ -164,6 +181,14 @@ if __name__ == '__main__':
         'Trusted Internet Hosts': {
             'url': 'code42.com',
             'search_string': 'code42.com'
+        },
+        'Netflix': {
+            'url': 'netflix.com',
+            'search_string': 'netflix'
+        },
+        'Microsoft Services': {
+            'url': 'outlook.com',
+            'search_string': 'office365'
         }
     }
     
@@ -201,8 +226,7 @@ if __name__ == '__main__':
             print(f'{Fore.LIGHTYELLOW_EX}{i} has timed out.{Style.RESET_ALL}')
             pass
         except Exception as e: 
-            print(f'{Fore.LIGHTRED_EX}Host {i}{e}{Style.RESET_ALL}')
-            
+            print(f'{Fore.LIGHTRED_EX}Host {i}{e}{Style.RESET_ALL}')  
             pass
         
         try:
@@ -214,19 +238,9 @@ if __name__ == '__main__':
     
 
     parse_data(url_dict)
-    # print_results(url_dict)
+    #print_results(url_dict)
     print('=-' * 80)
-    #pprint.pprint(undesignated_hosts)
-    f = open("results.txt", "w")
-    for i in undesignated_hosts:
-        tab = ''
-        for key in i:
-            stuff = f'{key} {i[key]}\n{tab}'
-            f.write(stuff)
-            tab = '\t'
-            #print(i[key])
-        
-
-    f.close()
+    
+    excel_report(UNDESIGNATED_HOSTS)
     print('=-' * 80)
     quit()
