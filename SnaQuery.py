@@ -187,7 +187,7 @@ class SnaQuery():
             r = my_session.request('GET', url, verify=False)
             results = json.loads(r.content)['data']['flows']
 
-            # print(json.dumps(results, indent=4))
+            #print(json.dumps(results, indent=4))
         return results
 
 
