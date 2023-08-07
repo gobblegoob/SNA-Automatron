@@ -106,8 +106,8 @@ def parse_data(url_dict, search_string):
             IP_LIST_TO_REMOVE.append(key)
 
     print(f'Updating {TARGET_TAG}...')
-    print(f'Adding the following Hosts: {IP_LIST_TO_ADD}')
-    print(f'Removing the following Hosts: {IP_LIST_TO_REMOVE}')
+    #print(f'Adding the following Hosts: {IP_LIST_TO_ADD}')
+    print(f'The following hosts were removed from hostgroup {TARGET_TAG}: {IP_LIST_TO_REMOVE}')
 
 
 def update_tag(updated_list):
