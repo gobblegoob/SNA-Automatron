@@ -107,7 +107,7 @@ def parse_data(url_dict, search_string):
 
     print(f'Updating {TARGET_TAG}...')
     #print(f'Adding the following Hosts: {IP_LIST_TO_ADD}')
-    print(f'The following hosts were removed from hostgroup {TARGET_TAG}: {IP_LIST_TO_REMOVE}')
+    #print(f'The following hosts were removed from hostgroup {TARGET_TAG}: {IP_LIST_TO_REMOVE}')
 
 
 def update_tag(updated_list):
@@ -118,7 +118,12 @@ def update_tag(updated_list):
     :arg: 
     :return:
     '''
-    tagupdate.update_tag_with_removals(updated_list, api)
+    print(f'{Fore.LIGHTGREEN_EX}Attempting to update {TARGET_TAG} with {updated_list.__len__()} values.{Style.RESET_ALL}')
+    # Ensure that SNA api session hasn't expired.  Rauth if it has.
+    if tagupdate.update_tag_with_removals(updated_list, api) is False:
+        api.session_authc()
+        tagupdate.update_tag_with_removals(updated_list, api)
+
     return
 
 if __name__ == '__main__':
@@ -201,6 +206,7 @@ if __name__ == '__main__':
 
     parse_data(url_dict, SEARCH_STRING)
 
+    print(f'{Fore.LIGHTBLUE_EX}We will remove {IP_LIST_TO_REMOVE.__len__()} from Hostgroup {TARGET_TAG}{Style.RESET_ALL}')
     # add matchers to the tag
     update_tag(IP_LIST_TO_ADD)
     print(f'{Fore.LIGHTYELLOW_EX}-' * 80)
