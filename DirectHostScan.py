@@ -160,7 +160,17 @@ def excel_report(data):
         print(f'Error creating log file. {e}')
 
 if __name__ == '__main__':
-    # Hostgroups and search strings
+    # Hostgroups and search strings. Add as many as necessary.
+    '''
+    search data format
+    {
+        'NAME OF HOSTGROUP TO UPDATE': {
+            'url': 'YOUR URL CAN MATCH CN OR SAN',
+            'search_string': 'YOUR REGEX SEARCH STRING CAN MATCH CN OR SAN'
+        }
+    }
+    
+    '''
     search_data = {
         'Dynamic Ring IPs': {
             'url': 'ring.com',
