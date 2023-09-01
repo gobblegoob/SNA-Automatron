@@ -34,10 +34,13 @@ class SnaTagAdd():
                 self.MY_TAG_ID = i['id']
                 self.MY_TAG_NAME = i['name']
                 break
-            if i['name'] == tag_name[0]:
+            elif i['name'] == tag_name[0]:
                 self.MY_TAG_ID = i['id']
                 self.MY_TAG_NAME = i['name']
                 break
+            else:
+                # Clear tag id if the tag we're searching for is not found.
+                self.MY_TAG_ID = ''
         return self.MY_TAG_ID
 
 
