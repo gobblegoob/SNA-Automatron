@@ -175,30 +175,6 @@ if __name__ == '__main__':
         'Dynamic Ring IPs': {
             'url': 'ring.com',
             'search_string': '(ring\.com)|(ring\.devices)'
-        },
-        'Webex': {
-            'url': 'webex.com',
-            'search_string': 'webex'
-        },
-        'FlexnetOperations': {
-            'url': 'flexnetoperations.barf',
-            'search_string': 'Flexera.Software'
-        },
-        'Duo Security': {
-            'url': 'duosecurity.com',
-            'search_string': 'duosecurity'
-        },
-        'Trusted Internet Hosts': {
-            'url': 'code42.com',
-            'search_string': 'code42.com'
-        },
-        'Netflix': {
-            'url': 'netflix.com',
-            'search_string': 'netflix'
-        },
-        'Microsoft Services': {
-            'url': 'outlook.com',
-            'search_string': 'office365'
         }
     }
     
